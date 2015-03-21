@@ -18,7 +18,8 @@ static void itemLoader(byte);
 
 void mMainOpen()
 {
-	buttons_setFuncs(NULL, menu_select, NULL);
+//	buttons_setFuncs(NULL, menu_select, NULL);
+	buttons_setFuncs(NULL, NULL, menu_select);  // wbp
 	beginAnimation(mOpen);
 }
 
@@ -26,10 +27,12 @@ static void mOpen()
 {
 	display_setDrawFunc(menu_draw);
 
-	buttons_setFuncs(menu_up, menu_select, menu_down);
+	buttons_setFuncs(menu_up, menu_select, menu_down);  // wbp
+//	buttons_setFuncs(menu_up, menu_down, menu_select);  // wbp
 
 	setMenuInfo(OPTION_COUNT, MENU_TYPE_ICON, PSTR(STR_MAINMENU));
-	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+//	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+	setMenuFuncs(MENUFUNC_NEXT, MENUFUNC_PREV, mSelect, itemLoader);  // wbp
 
 	setPrevMenuOpen(&prevMenuData, mOpen);
 

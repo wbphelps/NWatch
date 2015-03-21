@@ -18,7 +18,8 @@ static void itemLoader(byte);
 void mSettingsOpen()
 {
 	setMenuInfo(OPTION_COUNT, MENU_TYPE_ICON, PSTR(STR_SETTINGSMENU));
-	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+//	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+	setMenuFuncs(MENUFUNC_NEXT, MENUFUNC_PREV, mSelect, itemLoader);
 
 	setPrevMenuOpen(&prevMenuData, mSettingsOpen);
 

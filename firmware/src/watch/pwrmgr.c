@@ -130,8 +130,10 @@ void pwrmgr_update()
 		{
 			// Shutdown
 
-			if(userState == USER_ACTIVE)
+			if(userState == USER_ACTIVE) {
+			  menu_close();  // wbp
 				userSleep();
+			}
 
 			systemState = SYS_SLEEP;
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);

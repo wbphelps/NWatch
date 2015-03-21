@@ -12,12 +12,15 @@
 
 typedef enum
 {
-	STATE_STOPPED = 0,
-	STATE_TIMING
+	STATE_RESET = 0,
+	STATE_STOPPED,
+	STATE_TIMING,
+	STATE_SPLIT
 } stopwatch_state_t;
 
 static stopwatch_state_t state;
 static ulong timer;
+static ulong split;
 static millis_t lastMS;
 
 static bool btnReset(void);
@@ -35,12 +38,12 @@ void stopwatch_open()
 
 bool stopwatch_active()
 {
-	return (state == STATE_TIMING);
+	return (state > STATE_STOPPED);
 }
 
 void stopwatch_update()
 {
-	if(state == STATE_TIMING)
+	if(state > STATE_STOPPED)
 	{
 		millis_t now = millis();
 		timer += now - lastMS;
@@ -52,19 +55,33 @@ void stopwatch_update()
 
 static bool btnReset()
 {
-	timer = 0;
-	lastMS = millis();
+	if(state == STATE_TIMING)  // stopwatch running, do split
+	{
+		state = STATE_SPLIT;
+		split = timer;
+	}
+	else if(state == STATE_SPLIT)  // split, catch up again
+	{
+		state = STATE_TIMING;  // unsplit
+	}
+	else  // Stopped, do reset
+	{
+		timer = 0;
+		split = 0;
+		lastMS = millis();
+		state = STATE_RESET;
+	}
 	return true;
 }
 
 static bool btnStartStop()
 {
-	if(state == STATE_TIMING)
+	if(state > STATE_STOPPED)  // TIMING or SPLIT
 	{
 		state = STATE_STOPPED;
 		pwrmgr_setState(PWR_ACTIVE_STOPWATCH, PWR_STATE_NONE);
 	}
-	else if(state == STATE_STOPPED)
+	else // Stopped, start it
 	{
 		state = STATE_TIMING;
 		pwrmgr_setState(PWR_ACTIVE_STOPWATCH, PWR_STATE_IDLE);
@@ -90,11 +107,30 @@ static display_t draw()
 	byte num1;
 	byte num2;
 	byte num3;
-	ulong secs = timer / 1000;
 
-	if(timer < 3600000)
+	ulong time = timer;
+	switch (state)
 	{
-		num3 = (timer % 1000) / 10; // ms
+		case STATE_RESET:
+			draw_string_P(PSTR(STR_RESET),false,50,56);
+		break;
+		case STATE_STOPPED:
+			draw_string_P(PSTR(STR_STOP),false,50,56);
+		break;
+		case STATE_SPLIT:
+			time = split;
+			draw_string_P(PSTR(STR_SPLIT),false,50,56);
+		break;
+			case STATE_TIMING:
+			draw_string_P(PSTR(STR_RUN),false,50,56);
+		break;
+	}
+
+	ulong secs = time / 1000;
+
+	if(time < 3600000)
+	{
+		num3 = (time % 1000) / 10; // ms
 		num2 = secs % 60; // secs
 		num1 = secs / 60; // mins
 	}
@@ -115,7 +151,7 @@ static display_t draw()
 
 	// Draw time
 	draw_string(time_timeStr(), NOINVERT, 48, 0);
-
+	
 	return DISPLAY_BUSY;
 }
 

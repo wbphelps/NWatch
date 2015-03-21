@@ -20,7 +20,8 @@ static void setTimeout(void);
 void mSleepOpen()
 {
 	setMenuInfo(OPTION_COUNT, MENU_TYPE_ICON, PSTR(STR_SLEEPMENU));
-	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+//	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+	setMenuFuncs(MENUFUNC_NEXT, MENUFUNC_PREV, mSelect, itemLoader);
 	menuData.func.draw = mDraw;
 
 	setPrevMenuOpen(&prevMenuData, mSleepOpen);

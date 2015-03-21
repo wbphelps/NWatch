@@ -36,7 +36,8 @@ static void drawTickerNum(tickerData_t*);
 void watchface_normal()
 {
 	display_setDrawFunc(draw);
-	buttons_setFuncs(NULL, menu_select, NULL);
+//	buttons_setFuncs(NULL, menu_select, NULL);
+	buttons_setFuncs(NULL, NULL, menu_select);  // wbp
 	animation_start(NULL, ANIM_MOVE_ON);
 }
 

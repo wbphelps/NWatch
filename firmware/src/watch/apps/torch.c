@@ -8,10 +8,13 @@
 
 #include "common.h"
 
-static uint strobe;
+uint strobeV[] = {0, 50, 100, 200, 500, 1000};  // strobe delay times in ms
+static uint strobe = 0;
+static uint strobeI = 0;
 
 static bool btnExit(void);
-static bool btnFlashRate(void);
+static bool btnFlashRateUp(void);
+static bool btnFlashRateDown(void);
 static display_t draw(void);
 
 void torch_open()
@@ -19,8 +22,9 @@ void torch_open()
 	menu_close();
 
 	strobe = 0;
+	strobeI = 0;
 	display_setDrawFunc(draw);
-	buttons_setFuncs(btnExit, btnFlashRate, btnExit);
+	buttons_setFuncs(btnFlashRateUp, btnFlashRateDown, btnExit);
 }
 
 static bool btnExit()
@@ -30,12 +34,23 @@ static bool btnExit()
 	return true;
 }
 
-static bool btnFlashRate()
+static bool btnFlashRateUp()
 {
-	if(strobe < 500)
-		strobe += 50 * ((strobe / 50) + 1);
+	if (strobeI < 5)
+	  strobeI++;
 	else
-		strobe = 0;
+		strobeI = 0;  // wrap around
+  strobe = strobeV[strobeI];
+	return true;
+}
+
+static bool btnFlashRateDown()
+{
+  if (strobeI > 0)
+	  strobeI--;
+	else
+	  strobeI = 5;  // wrap around
+	strobe = strobeV[strobeI];
 	return true;
 }
 
