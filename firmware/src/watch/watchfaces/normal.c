@@ -287,9 +287,13 @@ static display_t ticker()
 		draw_bitmap(TIME_POS_X + 46 + 2, TIME_POS_Y, colon, FONT_COLON_WIDTH, FONT_COLON_HEIGHT, NOINVERT, 0);
 	
 	// Draw AM/PM character
-	char tmp[2];
+//	char tmp[2];
+//	tmp[0] = timeDate.time.ampm;
+//	tmp[1] = 0x00;
+	char tmp[3];
 	tmp[0] = timeDate.time.ampm;
-	tmp[1] = 0x00;
+	tmp[1] = 'M';
+	tmp[2] = 0x00;
 	draw_string(tmp, false, 104, 20);
 
 //	char buff[12];

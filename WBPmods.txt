@@ -5,12 +5,13 @@ N|Watch mods by William Phelps (wm@usa.net)
 	 right lower is down or right
 	 right upper is up or left
 
-
 2) torch - both up & down buttons work
 
 3) close current menu when going to sleep
 
 4) add Split feature to stopwatch
+
+5) 2 character am/pm indicator "AM" or "PM"
 
 My TODO list:
 
